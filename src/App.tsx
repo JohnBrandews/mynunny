@@ -5,6 +5,7 @@ import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
+import AuthCallback from './pages/AuthCallback';
 import NunnyRegister from './components/Auth/NunnyRegister';
 import ClientRegister from './components/Auth/ClientRegister';
 import Login from './components/Auth/Login';
@@ -69,6 +70,7 @@ function App() {
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               
               {/* Authentication Routes */}
               <Route 

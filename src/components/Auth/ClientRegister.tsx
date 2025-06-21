@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Upload, CheckCircle, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Upload, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { KENYAN_REGIONS } from '../../types';
 import LoadingSpinner from '../Common/LoadingSpinner';
@@ -11,6 +11,7 @@ const ClientRegister: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -88,7 +89,13 @@ const ClientRegister: React.FC = () => {
 
       const result = await register(userData, formData.password);
       if (result.success) {
-        setRegistrationSuccess(true);
+        if (result.requiresVerification) {
+          setUserEmail(formData.email);
+          setRegistrationSuccess(true);
+        } else {
+          // User is already verified and logged in
+          navigate('/client/dashboard');
+        }
       } else {
         setErrors({ submit: result.error || 'Registration failed. Please try again.' });
       }
@@ -104,25 +111,39 @@ const ClientRegister: React.FC = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 text-center">
           <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-6">
+              <Mail className="h-8 w-8 text-blue-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Registration Successful!</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Check Your Email!</h2>
             <p className="text-gray-600 mb-6">
-              We've sent a verification email to <strong>{formData.email}</strong>. 
+              We've sent a verification link to <strong>{userEmail}</strong>. 
               Please check your inbox and click the verification link to activate your account.
             </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-blue-900 mb-2">Next Steps:</h3>
+              <ol className="text-sm text-blue-800 text-left space-y-1">
+                <li>1. Check your email inbox (and spam folder)</li>
+                <li>2. Click the verification link in the email</li>
+                <li>3. Return here and log in with your credentials</li>
+              </ol>
+            </div>
             <div className="space-y-3">
               <Link
                 to="/client/login"
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium inline-block"
               >
-                Go to Login
+                Go to Login Page
               </Link>
               <p className="text-sm text-gray-500">
-                Didn't receive the email? Check your spam folder or{' '}
-                <button className="text-blue-600 hover:text-blue-500">
-                  resend verification email
+                Didn't receive the email?{' '}
+                <button 
+                  className="text-blue-600 hover:text-blue-500"
+                  onClick={() => {
+                    // Could implement resend functionality here
+                    alert('Please check your spam folder or try again in a few minutes.');
+                  }}
+                >
+                  Check spam folder
                 </button>
               </p>
             </div>

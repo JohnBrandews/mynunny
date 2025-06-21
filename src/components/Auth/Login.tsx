@@ -72,6 +72,12 @@ const Login: React.FC = () => {
               : 'Access your client account'
             }
           </p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>Important:</strong> You must verify your email before logging in. 
+              Check your inbox for the verification link after registration.
+            </p>
+          </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
